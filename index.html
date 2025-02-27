@@ -3,608 +3,1449 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>บริการจัดการเอกสารและ Excel ระดับพรีเมียม</title>
+    <title>JumlaoDee - บริการจัดการข้อมูล Excel มืออาชีพ</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #2563EB;
+            --secondary: #10B981;
+            --dark: #111827;
+            --light: #F9FAFB;
+            --gray: #6B7280;
+            --gradient: linear-gradient(135deg, var(--primary), #1e40af);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Prompt', sans-serif;
+            scroll-behavior: smooth;
         }
-
+        
         body {
-            background: #f0f4f8;
-            color: #1a1a2e;
-            line-height: 1.6;
+            background-color: var(--light);
+            color: var(--dark);
             overflow-x: hidden;
         }
-
-        /* Announcement Bar */
-        .announcement {
-            background: linear-gradient(90deg, #ff6f61, #ff9f1c);
-            color: #fff;
-            text-align: center;
-            padding: 15px;
-            font-size: 1.3em;
-            font-weight: 600;
-            overflow: hidden;
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        section {
+            padding: 6rem 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
             position: relative;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 0;
             z-index: 1000;
+            transition: var(--transition);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
         }
-
-        .announcement p {
-            display: inline-block;
-            white-space: nowrap;
-            animation: marquee 10s linear infinite;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        
+        .navbar.scrolled {
+            padding: 1rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
-
-        @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-
-        /* Header */
-        header {
-            background: linear-gradient(135deg, #16213e, #34495e, #5d76cb);
-            color: #fff;
-            text-align: center;
-            padding: 140px 20px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-link {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
             position: relative;
-            overflow: hidden;
-            animation: fadeIn 1.8s ease-in-out;
+            transition: var(--transition);
         }
-
-        header::before {
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .nav-link::after {
             content: '';
             position: absolute;
-            top: -60%;
-            left: -60%;
-            width: 220%;
-            height: 220%;
-            background: radial-gradient(circle, rgba(255, 159, 28, 0.25), transparent);
-            animation: glowPulse 4s infinite ease-in-out;
-            z-index: 0;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: var(--transition);
         }
-
-        header h1 {
-            font-size: 3.5em;
-            font-weight: 700;
-            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-            animation: slideUp 1.2s ease-in-out;
+        
+        .nav-link:hover::after {
+            width: 100%;
         }
-
-        header p {
-            font-size: 1.6em;
-            color: #e6e9f0;
-            margin-bottom: 35px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-btn {
-            display: inline-block;
-            padding: 18px 50px;
-            background: linear-gradient(45deg, #ff9f1c, #ff6f61);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1.2em;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-            transition: transform 0.5s ease, box-shadow 0.5s ease, background 0.5s ease;
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #f6f9ff 0%, #e9f1ff 100%);
             position: relative;
             overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: rgba(37, 99, 235, 0.05);
+            z-index: 0;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -150px;
+            left: -150px;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.05);
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+        
+        .hero-content.reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+        
+        /* Floating Elements */
+        .floating {
+            position: absolute;
+            opacity: 0.5;
             z-index: 1;
         }
-
-        .cta-btn::after {
+        
+        .floating-1 {
+            top: 20%;
+            right: 10%;
+            width: 70px;
+            height: 70px;
+            background: var(--primary);
+            border-radius: 12px;
+            animation: floating 8s ease-in-out infinite;
+        }
+        
+        .floating-2 {
+            bottom: 15%;
+            right: 20%;
+            width: 40px;
+            height: 40px;
+            background: var(--secondary);
+            border-radius: 50%;
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        .floating-3 {
+            top: 30%;
+            left: 8%;
+            width: 50px;
+            height: 50px;
+            transform: rotate(45deg);
+            background: rgba(37, 99, 235, 0.3);
+            animation: floating 10s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(10px, 10px) rotate(5deg); }
+            50% { transform: translate(0, 15px) rotate(0deg); }
+            75% { transform: translate(-10px, 10px) rotate(-5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        
+        /* 3D Button Effect */
+        .btn-3d {
+            position: relative;
+            padding: 1.2rem 2.5rem;
+            margin: 0.5rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            overflow: hidden;
+            box-shadow: 0 5px 0 #1e40af, 0 10px 20px rgba(0, 0, 0, 0.2);
+            transform-style: preserve-3d;
+            transform: perspective(500px) rotateX(0deg);
+            display: inline-block;
+        }
+        
+        .btn-3d:hover {
+            transform: perspective(500px) rotateX(10deg) translateY(-5px);
+            box-shadow: 0 12px 0 #1e40af, 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-3d:active {
+            transform: translateY(5px);
+            box-shadow: 0 0 0 #1e40af, 0 5px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-3d-secondary {
+            background: var(--secondary);
+            box-shadow: 0 5px 0 #065f46, 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-3d-secondary:hover {
+            box-shadow: 0 12px 0 #065f46, 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-3d-secondary:active {
+            box-shadow: 0 0 0 #065f46, 0 5px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-3d::before {
             content: '';
             position: absolute;
             top: 0;
-            left: -150%;
-            width: 200%;
+            left: -100%;
+            width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.3);
-            transition: left 0.6s ease;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
         }
-
-        .cta-btn:hover {
-            transform: scale(1.2) translateY(-8px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            background: linear-gradient(45deg, #ff6f61, #ff9f1c);
+        
+        .btn-3d:hover::before {
+            left: 100%;
         }
-
-        .cta-btn:hover::after {
-            left: 150%;
-        }
-
+        
         /* Services Section */
         .services {
-            padding: 120px 40px;
-            text-align: center;
-            background: linear-gradient(to bottom, #f0f4f8, #d9e2ec);
-        }
-
-        .services h2 {
-            font-size: 3em;
-            color: #16213e;
-            font-weight: 700;
-            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
-            margin-bottom: 70px;
-            animation: slideUp 1.2s ease-in-out;
-        }
-
-        .service-grid {
-            display: flex;
-            justify-content: center;
-            gap: 50px;
-            flex-wrap: wrap;
-            max-width: 1300px;
-            margin: 0 auto;
-            perspective: 2000px;
-        }
-
-        .service-card {
-            background: linear-gradient(135deg, #34495e, #16213e);
-            color: #e6e9f0;
-            width: 340px;
-            padding: 40px;
-            border-radius: 25px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
-            opacity: 0;
-            animation: fadeInUp 1.2s ease forwards;
+            background-color: white;
             position: relative;
             overflow: hidden;
-            border: 2px solid #ff9f1c;
         }
-
-        .service-card:nth-child(1) { animation-delay: 0.3s; }
-        .service-card:nth-child(2) { animation-delay: 0.5s; }
-        .service-card:nth-child(3) { animation-delay: 0.7s; }
-
-        .service-card:hover {
-            transform: scale(1.18) translateZ(30px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
-            width: 380px;
-            background: linear-gradient(135deg, #5d76cb, #34495e);
-            z-index: 10;
+        
+        .services::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: rgba(37, 99, 235, 0.05);
+            z-index: 0;
         }
-
-        .service-grid:hover .service-card:not(:hover) {
-            transform: scale(0.92) translateX(15px);
-            filter: blur(3px);
-            transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+        
+        .services::after {
+            content: '';
+            position: absolute;
+            bottom: -150px;
+            right: -150px;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.05);
+            z-index: 0;
         }
-
-        .service-card h3 {
-            margin-bottom: 20px;
-            font-size: 1.8em;
-            font-weight: 600;
-            color: #ff9f1c;
-            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .service-card p {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-
-        .service-card ul {
-            list-style: none;
-            margin-top: 25px;
-            text-align: left;
-            font-size: 1.1em;
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            z-index: 1;
             opacity: 0;
-            max-height: 0;
-            transition: opacity 0.5s ease, max-height 0.7s ease;
+            transform: translateY(30px);
+            transition: all 1s ease;
         }
-
-        .service-card:hover ul {
+        
+        .section-title.reveal {
             opacity: 1;
-            max-height: 300px;
+            transform: translateY(0);
         }
-
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--gradient);
+        }
+        
+        .section-title p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 1.5rem auto 0;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .service-card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            text-align: center;
+            height: 100%;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        .service-card.reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
         .service-card::before {
             content: '';
             position: absolute;
-            top: -60%;
-            left: -60%;
-            width: 220%;
-            height: 220%;
-            background: radial-gradient(circle, rgba(255, 159, 28, 0.35), transparent);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            z-index: -1;
             opacity: 0;
-            transition: opacity 0.6s ease;
+            transition: var(--transition);
+            transform: translateY(100%);
         }
-
+        
+        .service-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
         .service-card:hover::before {
             opacity: 1;
+            transform: translateY(0);
         }
-
-        /* Reviews Section */
-        .reviews {
-            padding: 120px 40px;
-            background: linear-gradient(to bottom, #d9e2ec, #c8d3e0);
+        
+        .service-card:hover .service-icon,
+        .service-card:hover h3,
+        .service-card:hover p {
+            color: white;
+        }
+        
+        .service-icon {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+        
+        .service-card p {
+            color: var(--gray);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+        
+        /* CTA Section */
+        .cta {
+            background: var(--gradient);
+            color: white;
             text-align: center;
-            position: relative;
-        }
-
-        .reviews h2 {
-            font-size: 3em;
-            color: #16213e;
-            font-weight: 700;
-            margin-bottom: 80px;
-            animation: slideUp 1.2s ease-in-out;
-            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        .review-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-        }
-
-        .review-slider {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            overflow: hidden;
-            position: relative;
-            width: 100%;
-        }
-
-        .review-slide {
-            display: flex;
-            animation: infiniteSlide 20s linear infinite;
-            width: max-content;
-        }
-
-        @keyframes infiniteSlide {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        .review-card {
-            background: linear-gradient(135deg, #fff, #f5f6fa);
-            padding: 35px;
-            border-radius: 20px;
-            margin: 20px;
-            width: 360px;
-            flex-shrink: 0;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-            border: 2px solid #ff9f1c;
-            color: #1a1a2e;
+            padding: 5rem 0;
+            min-height: auto;
             position: relative;
             overflow: hidden;
-            cursor: pointer;
         }
-
-        .review-card:hover {
-            transform: scale(1.08) translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
-            background: linear-gradient(135deg, #f5f6fa, #fff);
-            z-index: 5;
-        }
-
-        .review-card::before {
-            content: '★★★★★';
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            color: #ff9f1c;
-            font-size: 1.2em;
-            opacity: 0.8;
-            transition: transform 0.5s ease;
-        }
-
-        .review-card:hover::before {
-            transform: scale(1.2);
-        }
-
-        .review-card p {
-            font-size: 1.2em;
-            margin-bottom: 15px;
-            font-style: italic;
-        }
-
-        .review-card strong {
-            font-size: 1.1em;
-            color: #ff6f61;
-            font-weight: 600;
-        }
-
-        .review-card::after {
+        
+        .cta::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 159, 28, 0.2), transparent);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .review-card:hover::after {
-            opacity: 1;
-        }
-
-        /* Navigation Arrows */
-        .review-nav {
-            position: absolute;
-            top: 50%;
+            top: 0;
+            left: 0;
             width: 100%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-            z-index: 10;
-            padding: 0 10px;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.1;
         }
-
-        .review-nav span {
-            background: rgba(255, 159, 28, 0.8);
-            color: #fff;
-            width: 50px;
-            height: 50px;
+        
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 1s ease;
+        }
+        
+        .cta-content.reveal {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2.5rem;
+            opacity: 0.9;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        /* Contact Section */
+        .contact {
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .contact::before {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: rgba(37, 99, 235, 0.05);
+            z-index: 0;
+        }
+        
+        .contact-item {
+            background: linear-gradient(135deg, white, #f8fafc);
+            border-radius: 1rem;
+            padding: 3rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+        
+        .contact-item.reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .contact-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .contact-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--gradient);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
-            font-size: 1.5em;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, background 0.3s ease;
+            font-size: 3rem;
+            margin: 0 auto 2rem;
+            position: relative;
+            overflow: hidden;
         }
-
-        .review-nav span:hover {
-            transform: scale(1.2);
-            background: #ff6f61;
+        
+        .contact-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
         }
-
+        
+        .contact-item:hover .contact-icon::before {
+            left: 100%;
+        }
+        
+        .contact-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .contact-text p {
+            color: var(--gray);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .contact-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+        
+        .contact-link:hover {
+            background-color: #1e40af;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
         /* Footer */
         footer {
-            background: linear-gradient(135deg, #16213e, #34495e);
-            color: #ff9f1c;
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0;
             text-align: center;
-            padding: 60px 40px;
-            box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        footer p {
-            color: #e6e9f0;
-            font-size: 1.2em;
-            margin: 10px 0;
-            transition: transform 0.4s ease, color 0.4s ease;
-        }
-
-        footer p:hover {
-            transform: scale(1.05) translateY(-5px);
-            color: #ff6f61;
-        }
-
-        .contact-info {
             position: relative;
-            display: inline-block;
-            padding: 15px 30px;
-            background: linear-gradient(45deg, #ff9f1c, #ff6f61);
-            border-radius: 15px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-            transition: all 0.5s ease;
-            cursor: pointer;
         }
-
-        .contact-info:hover {
-            transform: scale(1.1) rotate(2deg);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-            background: linear-gradient(45deg, #ff6f61, #ff9f1c);
-        }
-
-        .contact-info::before {
-            content: '✨ ติดต่อเลย!';
+        
+        footer::before {
+            content: '';
             position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #ff9f1c;
-            font-size: 1em;
-            font-weight: 600;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient);
+        }
+        
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .footer-text {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+        
+        .social-link:hover {
+            background-color: var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Scroll to Top Button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            z-index: 999;
             opacity: 0;
-            transition: opacity 0.4s ease, top 0.4s ease;
+            visibility: hidden;
         }
-
-        .contact-info:hover::before {
+        
+        .scroll-to-top.active {
             opacity: 1;
-            top: -50px;
+            visibility: visible;
         }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        
+        .scroll-to-top:hover {
+            background-color: var(--secondary);
+            transform: translateY(-5px);
         }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
+        
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
         }
-
-        @keyframes slideUp {
-            from { transform: translateY(70px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
         }
-
-        @keyframes glowPulse {
-            0% { opacity: 0.2; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.08); }
-            100% { opacity: 0.2; transform: scale(1); }
+        
+        .modal-content {
+            background-color: white;
+            max-width: 900px;
+            width: 90%;
+            border-radius: 1rem;
+            overflow: hidden;
+            position: relative;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
-
-        /* Responsive */
+        
+        .modal.active .modal-content {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            background: var(--gradient);
+            color: white;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .modal-title {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .modal-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        
+        .close-modal:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+        
+        .modal-body {
+            padding: 2rem;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .modal-section {
+            margin-bottom: 2rem;
+        }
+        
+        .modal-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .modal-section p {
+            color: var(--gray);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-list {
+            list-style-type: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-item {
+            padding-left: 1.8rem;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .feature-item::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+        
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: right;
+        }
+        
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .service-grid {
-                flex-direction: column;
-                align-items: center;
+            .hero h1 {
+                font-size: 2.5rem;
             }
-            .service-card {
-                width: 300px;
+            
+            .hero p {
+                font-size: 1.1rem;
             }
-            .service-card:hover {
-                width: 340px;
-                transform: scale(1.12);
+            
+            .nav-links {
+                display: none;
             }
-            .service-grid:hover .service-card:not(:hover) {
-                transform: scale(1);
-                filter: none;
+            
+            .services-grid {
+                grid-template-columns: 1fr;
             }
-            .review-card {
-                width: 100%;
-                margin: 10px 0;
+            
+            .feature-list {
+                grid-template-columns: 1fr;
             }
-            header h1 { font-size: 2.5em; }
-            .services h2, .reviews h2 { font-size: 2.2em; }
-            .review-nav { display: none; }
-            .contact-info { padding: 10px 20px; }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Announcement Bar -->
-    <div class="announcement">
-        <p>โปรโมชั่นพิเศษ! รับส่วนลด 30% สำหรับงาน Excel ด่วน - สั่งเลยวันนี้!</p>
-    </div>
-
-    <!-- Header -->
-    <header>
-        <h1>บริการจัดการเอกสารและ Excel ระดับพรีเมียม</h1>
-        <p>จัดการข้อมูลจำนวนมาก ด้วยเทคโนโลยีทันสมัยและทีมงานมืออาชีพ</p>
-        <a href="#contact" class="cta-btn">เริ่มสั่งงานทันที</a>
-    </header>
-
-    <!-- Services -->
-    <section class="services">
-        <h2>บริการของเรา</h2>
-        <div class="service-grid">
-            <div class="service-card">
-                <h3>จัดการข้อมูล Excel</h3>
-                <p>จัดระเบียบข้อมูลนับแสนรายการ</p>
-                <ul>
-                    <li>จัดเรียงข้อมูลตามหมวดหมู่</li>
-                    <li>กรองข้อมูลซ้ำ</li>
-                    <li>สร้างตารางสรุปอัตโนมัติ</li>
-                </ul>
-            </div>
-            <div class="service-card">
-                <h3>สร้าง Macro อัตโนมัติ</h3>
-                <p>ทำให้งาน Excel เป็นอัตโนมัติ</p>
-                <ul>
-                    <li>บันทึกขั้นตอนซ้ำ ๆ</li>
-                    <li>สร้างปุ่มสั่งงาน</li>
-                    <li>ลดเวลาในการทำงาน</li>
-                </ul>
-            </div>
-            <div class="service-card">
-                <h3>วิเคราะห์ข้อมูล</h3>
-                <p>เปลี่ยนข้อมูลเป็น insight</p>
-                <ul>
-                    <li>สร้างกราฟสรุปผล</li>
-                    <li>วิเคราะห์แนวโน้ม</li>
-                    <li>รายงานข้อมูลเชิงลึก</li>
-                </ul>
-            </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-chart-line"></i> JumlaoDee
+            </a>
+            <ul class="nav-links">
+                <li><a href="#hero" class="nav-link">หน้าแรก</a></li>
+                <li><a href="#services" class="nav-link">บริการ</a></li>
+                <li><a href="#contact" class="nav-link">ติดต่อ</a></li>
+            </ul>
         </div>
-    </section>
-
-    <!-- Reviews -->
-    <section class="reviews">
-        <h2>รีวิวจากลูกค้า</h2>
-        <div class="review-container">
-            <div class="review-slider">
-                <div class="review-slide">
-                    <div class="review-card">
-                        <p>"จัดการข้อมูลแสนรายการได้ในวันเดียว! งานคุณภาพสูงมาก"</p>
-                        <p><strong>- คุณแอน, Data Analyst</strong></p>
-                    </div>
-                    <div class="review-card">
-                        <p>"Macro ช่วยประหยัดเวลาไปมาก ทีมงานมืออาชีพสุด ๆ"</p>
-                        <p><strong>- คุณบี, Project Manager</strong></p>
-                    </div>
-                    <div class="review-card">
-                        <p>"กราฟสวย วิเคราะห์ข้อมูลได้ลึก เกินคาดจริง ๆ"</p>
-                        <p><strong>- คุณซี, Business Owner</strong></p>
-                    </div>
-                    <div class="review-card">
-                        <p>"จัดการข้อมูลแสนรายการได้ในวันเดียว! งานคุณภาพสูงมาก"</p>
-                        <p><strong>- คุณแอน, Data Analyst</strong></p>
-                    </div>
-                    <!-- Duplicate for infinite loop -->
-                    <div class="review-card">
-                        <p>"Macro ช่วยประหยัดเวลาไปมาก ทีมงานมืออาชีพสุด ๆ"</p>
-                        <p><strong>- คุณบี, Project Manager</strong></p>
-                    </div>
-                    <div class="review-card">
-                        <p>"กราฟสวย วิเคราะห์ข้อมูลได้ลึก เกินคาดจริง ๆ"</p>
-                        <p><strong>- คุณซี, Business Owner</strong></p>
-                    </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="floating floating-1"></div>
+        <div class="floating floating-2"></div>
+        <div class="floating floating-3"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>บริการจัดการและวิเคราะห์ข้อมูล <span>Excel ขนาดใหญ่</span></h1>
+                <p>เราเชี่ยวชาญในการจัดการข้อมูล Excel นับแสนแถว พร้อมให้บริการวิเคราะห์ข้อมูลเชิงลึก สร้างระบบอัตโนมัติด้วย VBA และพัฒนาโซลูชันตามความต้องการของธุรกิจคุณ</p>
+                <div class="hero-buttons">
+                    <a href="#services" class="btn-3d">บริการของเรา <i class="fas fa-arrow-right"></i></a>
+                    <a href="#contact" class="btn-3d btn-3d-secondary">ติดต่อเรา</a>
                 </div>
             </div>
-            <div class="review-nav">
-                <span class="prev">◄</span>
-                <span class="next">►</span>
+        </div>
+    </section>
+    
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-title">
+                <h2>บริการของเรา</h2>
+                <p>เราให้บริการครอบคลุมทุกด้านเกี่ยวกับ Excel ตั้งแต่การจัดการข้อมูลขนาดใหญ่ การวิเคราะห์ ไปจนถึงการสร้างระบบอัตโนมัติด้วย VBA</p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card" data-delay="100" data-modal="modal1">
+                    <i class="fas fa-database service-icon"></i>
+                    <h3>จัดการข้อมูลขนาดใหญ่</h3>
+                    <p>รองรับข้อมูลนับแสนแถวด้วยประสิทธิภาพสูง</p>
+                </div>
+                
+                <div class="service-card" data-delay="200" data-modal="modal2">
+                    <i class="fas fa-chart-pie service-icon"></i>
+                    <h3>วิเคราะห์ข้อมูลเชิงลึก</h3>
+                    <p>ค้นพบข้อมูลเชิงลึกเพื่อการตัดสินใจที่ชาญฉลาด</p>
+                </div>
+                
+                <div class="service-card" data-delay="300" data-modal="modal3">
+                    <i class="fas fa-cogs service-icon"></i>
+                    <h3>พัฒนาระบบด้วย VBA</h3>
+                    <p>สร้างระบบอัตโนมัติเพื่อเพิ่มประสิทธิภาพการทำงาน</p>
+                </div>
+                
+                <div class="service-card" data-delay="400" data-modal="modal4">
+                    <i class="fas fa-code service-icon"></i>
+                    <h3>แอปพลิเคชันใน Excel</h3>
+                    <p>พัฒนาแอปพลิเคชันเต็มรูปแบบบน Excel</p>
+                </div>
+                
+                <div class="service-card" data-delay="500" data-modal="modal5">
+                    <i class="fas fa-sync-alt service-icon"></i>
+                    <h3>ระบบประมวลผลอัตโนมัติ</h3>
+                    <p>ประหยัดเวลาด้วยระบบประมวลผลอัตโนมัติที่แม่นยำ</p>
+                </div>
+                
+                <div class="service-card" data-delay="600" data-modal="modal6">
+                    <i class="fas fa-graduation-cap service-icon"></i>
+                    <h3>ฝึกอบรมเฉพาะทาง</h3>
+                    <p>หลักสูตรการใช้งาน Excel ขั้นสูงและการเขียน VBA</p>
+                </div>
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer id="contact">
-        <div class="contact-info">
-            <p>ติดต่อเรา: LINE @excelpro | อีเมล: info@excelpro.com</p>
+    
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>ยกระดับการจัดการข้อมูล Excel ของคุณ</h2>
+                <p>เราพร้อมช่วยให้คุณจัดการข้อมูลได้อย่างมีประสิทธิภาพ ลดเวลาการทำงาน และเพิ่มประสิทธิภาพในการวิเคราะห์ข้อมูล</p>
+                <div class="cta-buttons">
+                    <a href="#contact" class="btn-3d">ติดต่อเรา</a>
+                </div>
+            </div>
         </div>
-        <p>© 2025 บริการจัดการเอกสารและ Excel ระดับพรีเมียม</p>
+    </section>
+    
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>ติดต่อเรา</h2>
+                <p>สนใจบริการหรือต้องการข้อมูลเพิ่มเติม? ติดต่อเราผ่าน Line ได้ตามช่องทางด้านล่าง</p>
+            </div>
+            
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <i class="fab fa-line"></i>
+                </div>
+                <div class="contact-text">
+                    <h3>Line คุณโดม</h3>
+                    <p>ติดต่อเราผ่าน Line เพื่อรับข้อมูลและคำปรึกษาเพิ่มเติม</p>
+                    <a href="https://line.me/ti/p/FY_E24MWyp" class="contact-link">
+                        <i class="fab fa-line"></i> @DOME
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-line"></i> JumlaoDee
+                </div>
+                <p class="footer-text">เราเป็นผู้เชี่ยวชาญด้านการจัดการและวิเคราะห์ข้อมูล Excel ขนาดใหญ่ พร้อมให้บริการพัฒนาระบบอัตโนมัติด้วย VBA</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 JumlaoDee. สงวนลิขสิทธิ์.</p>
+            </div>
+        </div>
     </footer>
-
-    <!-- JavaScript for Navigation and Smooth Scroll -->
+    
+    <!-- Scroll to Top Button -->
+    <div class="scroll-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <!-- Modals -->
+    <div class="modal" id="modal1">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-database"></i> จัดการข้อมูลขนาดใหญ่</h2>
+                <p class="modal-subtitle">รองรับข้อมูล Excel ขนาดใหญ่นับแสนแถว ด้วยประสิทธิภาพสูงและความแม่นยำ</p>
+                <div class="close-modal"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3><i class="fas fa-info-circle"></i> รายละเอียดบริการ</h3>
+                    <p>เรามีประสบการณ์ในการจัดการข้อมูล Excel ขนาดใหญ่นับแสนแถว ด้วยเทคนิคและเครื่องมือที่ทันสมัย ช่วยให้คุณประมวลผลข้อมูลจำนวนมากได้อย่างรวดเร็วและมีประสิทธิภาพ ไม่ว่าจะเป็นการรวมข้อมูลจากหลายแหล่ง การทำความสะอาดข้อมูล หรือการจัดโครงสร้างข้อมูลให้พร้อมสำหรับการวิเคราะห์</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-th-list"></i> บริการที่ครอบคลุม</h3>
+                    <ul class="feature-list">
+                        <li class="feature-item">นำเข้าข้อมูลจากหลายแหล่งและหลายรูปแบบ</li>
+                        <li class="feature-item">รวมข้อมูลจากหลายไฟล์เข้าด้วยกัน</li>
+                        <li class="feature-item">ทำความสะอาดและแก้ไขข้อมูลที่ไม่สมบูรณ์</li>
+                        <li class="feature-item">ตรวจสอบและกำจัดข้อมูลซ้ำซ้อน</li>
+                        <li class="feature-item">จัดโครงสร้างข้อมูลให้เหมาะสมสำหรับการใช้งาน</li>
+                        <li class="feature-item">ประมวลผลข้อมูลปริมาณมากอย่างมีประสิทธิภาพ</li>
+                        <li class="feature-item">แปลงข้อมูลให้อยู่ในรูปแบบที่ต้องการ</li>
+                        <li class="feature-item">วิเคราะห์คุณภาพของข้อมูลและแก้ไขปัญหา</li>
+                    </ul>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-lightbulb"></i> เทคนิคและเครื่องมือที่ใช้</h3>
+                    <p>เราใช้เทคนิคขั้นสูงและเครื่องมือพิเศษเพื่อจัดการกับข้อมูลขนาดใหญ่ ไม่ว่าจะเป็นการใช้ Power Query, Power Pivot, VBA, และฟังก์ชันขั้นสูงของ Excel เพื่อให้การจัดการข้อมูลมีประสิทธิภาพสูงสุด เรายังมีเทคนิคในการลดขนาดไฟล์ Excel ให้ทำงานได้เร็วขึ้นโดยไม่สูญเสียข้อมูลสำคัญ</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-star"></i> ข้อดีของบริการ</h3>
+                    <ul class="feature-list">
+                        <li class="feature-item">ประหยัดเวลาในการจัดการข้อมูลขนาดใหญ่</li>
+                        <li class="feature-item">ลดความผิดพลาดจากการจัดการข้อมูลด้วยมือ</li>
+                        <li class="feature-item">ข้อมูลมีคุณภาพพร้อมสำหรับการวิเคราะห์</li>
+                        <li class="feature-item">รองรับข้อมูลทุกรูปแบบและทุกขนาด</li>
+                        <li class="feature-item">สร้างระบบจัดการข้อมูลที่ใช้งานได้อย่างต่อเนื่อง</li>
+                        <li class="feature-item">มีระบบสำรองข้อมูลเพื่อความปลอดภัย</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#contact" class="btn-3d" onclick="closeModal()">สนใจบริการนี้ <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="modal2">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-chart-pie"></i> วิเคราะห์ข้อมูลเชิงลึก</h2>
+                <p class="modal-subtitle">ค้นพบข้อมูลเชิงลึกที่มีคุณค่าจากข้อมูลดิบ ด้วยเครื่องมือวิเคราะห์ขั้นสูง</p>
+                <div class="close-modal"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3><i class="fas fa-info-circle"></i> รายละเอียดบริการ</h3>
+                    <p>เราใช้เทคนิคการวิเคราะห์ข้อมูลขั้นสูงเพื่อค้นหาข้อมูลเชิงลึกที่มีคุณค่าจากข้อมูลดิบของคุณ ไม่ว่าจะเป็นการวิเคราะห์แนวโน้ม การหาความสัมพันธ์ระหว่างข้อมูล หรือการสร้างโมเดลการทำนาย เราสามารถช่วยให้คุณเข้าใจข้อมูลและใช้ข้อมูลเหล่านั้นในการตัดสินใจทางธุรกิจได้อย่างมีประสิทธิภาพ</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-th-list"></i> บริการที่ครอบคลุม</h3>
+                    <ul class="feature-list">
+                        <li class="feature-item">วิเคราะห์แนวโน้มและรูปแบบของข้อมูล</li>
+                        <li class="feature-item">ค้นหาความสัมพันธ์ระหว่างตัวแปรต่างๆ</li>
+                        <li class="feature-item">สร้างแดชบอร์ดสรุปข้อมูลที่สำคัญ</li>
+                        <li class="feature-item">วิเคราะห์การกระจายตัวของข้อมูล</li>
+                        <li class="feature-item">สร้างโมเดลการทำนายสำหรับอนาคต</li>
+                        <li class="feature-item">วิเคราะห์ตัวชี้วัดผลการดำเนินงาน (KPI)</li>
+                        <li class="feature-item">จัดทำรายงานวิเคราะห์ที่เข้าใจง่าย</li>
+                        <li class="feature-item">วิเคราะห์สถิติขั้นสูงที่เหมาะกับข้อมูล</li>
+                    </ul>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-lightbulb"></i> เทคนิคและเครื่องมือที่ใช้</h3>
+                    <p>เราใช้เครื่องมือวิเคราะห์ข้อมูลที่ทันสมัยใน Excel เช่น Power Pivot, Power BI, ฟังก์ชันสถิติขั้นสูง และเทคนิคการวิเคราะห์เชิงพยากรณ์ เพื่อให้ได้ผลลัพธ์ที่แม่นยำและมีคุณค่าต่อการนำไปใช้งาน เราเน้นการนำเสนอข้อมูลในรูปแบบที่เข้าใจง่ายผ่านแผนภูมิและกราฟิกที่สวยงาม</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-star"></i> ข้อดีของบริการ</h3>
+                    <ul class="feature-list">
+                        <li class="feature-item">ค้นพบข้อมูลเชิงลึกที่อาจมองข้าม</li>
+                        <li class="feature-item">ตัดสินใจทางธุรกิจบนพื้นฐานของข้อมูล</li>
+                        <li class="feature-item">เห็นแนวโน้มและทำนายอนาคตได้แม่นยำ</li>
+                        <li class="feature-item">สร้างรายงานที่น่าประทับใจสำหรับผู้บริหาร</li>
+                        <li class="feature-item">ระบุปัญหาและโอกาสจากข้อมูลที่มีอยู่</li>
+                        <li class="feature-item">วัดผลการดำเนินงานได้อย่างมีประสิทธิภาพ</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#contact" class="btn-3d" onclick="closeModal()">สนใจบริการนี้ <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="modal3">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-cogs"></i> พัฒนาระบบด้วย VBA</h2>
+                <p class="modal-subtitle">เพิ่มประสิทธิภาพการทำงานด้วยการสร้างระบบอัตโนมัติผ่าน VBA (Visual Basic for Applications)</p>
+                <div class="close-modal"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3><i class="fas fa-info-circle"></i> รายละเอียดบริการ</h3>
+                    <p>VBA (Visual Basic for Applications) เป็นเครื่องมือที่ทรงพลังใน Excel ที่ช่วยให้คุณสามารถสร้างระบบอัตโนมัติ ลดเวลาในการทำงานที่ซ้ำซ้อน และเพิ่มประสิทธิภาพในการทำงาน เราเชี่ยวชาญในการพัฒนาโค้ด VBA ที่ตอบโจทย์ความต้องการเฉพาะของธุรกิจคุณ ตั้งแต่มาโครอย่างง่ายไปจนถึงระบบอัตโนมัติที่ซับซ้อน</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-th-list"></i> บริการที่ครอบคลุม</h3>
+                    <ul class="feature-list">
+                        <li class="feature-item">สร้างมาโครเพื่อทำงานซ้ำๆ อัตโนมัติ</li>
+                        <li class="feature-item">พัฒนาฟอร์มกรอกข้อมูลแบบกำหนดเอง</li>
+                        <li class="feature-item">สร้างระบบรายงานอัตโนมัติประจำวัน/สัปดาห์</li>
+                        <li class="feature-item">พัฒนาเครื่องมือประมวลผลข้อมูลเฉพาะทาง</li>
+                        <li class="feature-item">สร้างระบบตรวจสอบและแก้ไขข้อมูลอัตโนมัติ</li>
+                        <li class="feature-item">เชื่อมต่อกับฐานข้อมูลภายนอกและระบบอื่นๆ</li>
+                        <li class="feature-item">สร้างระบบติดตามข้อมูลและแจ้งเตือน</li>
+                        <li class="feature-item">พัฒนาเมนูและตัวช่วยในการใช้งาน Excel</li>
+                    </ul>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-lightbulb"></i> เทคนิคและเครื่องมือที่ใช้</h3>
+                    <p>เราใช้เทคนิคการเขียนโค้ด VBA ที่มีประสิทธิภาพ มีโครงสร้างที่ดี และง่ายต่อการบำรุงรักษา เราสามารถพัฒนาโค้ดที่ทำงานร่วมกับเครื่องมืออื่นๆ ใน Office และบริการภายนอกผ่าน API เพื่อสร้างระบบที่ครบวงจร นอกจากนี้ เรายังสามารถสร้างโค้ดที่ทำงานได้ทั้งบน Windows และ Mac</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-star"></i> ข้อดีของบริการ</h3>
+                    <ul class="feature-list">
+                        <li class="feature-item">ลดเวลาในการทำงานที่ซ้ำซ้อนและน่าเบื่อ</li>
+                        <li class="feature-item">ลดความผิดพลาดจากการทำงานด้วยมือ</li>
+                        <li class="feature-item">เพิ่มประสิทธิภาพและความเร็วในการทำงาน</li>
+                        <li class="feature-item">สร้างระบบที่ใช้งานได้ง่ายแม้ไม่มีความรู้ด้านเทคนิค</li>
+                        <li class="feature-item">พัฒนาตามความต้องการเฉพาะของธุรกิจคุณ</li>
+                        <li class="feature-item">รองรับการเปลี่ยนแปลงและขยายระบบในอนาคต</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#contact" class="btn-3d" onclick="closeModal()">สนใจบริการนี้ <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="modal4">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-code"></i> แอปพลิเคชันใน Excel</h2>
+                <p class="modal-subtitle">พัฒนาแอปพลิเคชันเต็มรูปแบบบน Excel ที่ตอบโจทย์ความต้องการเฉพาะของธุรกิจคุณ</p>
+                <div class="close-modal"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3><i class="fas fa-info-circle"></i> รายละเอียดบริการ</h3>
+                    <p>Excel ไม่ได้เป็นเพียงเครื่องมือคำนวณและจัดการข้อมูลเท่านั้น แต่ยังสามารถพัฒนาเป็นแอปพลิเคชันเต็มรูปแบบที่มีหน้าจอผู้ใช้ที่เป็นมิตร ฟังก์ชันการทำงานที่หลากหลาย และตอบโจทย์ความต้องการเฉพาะของธุรกิจคุณได้ เราเชี่ยวชาญในการพัฒนาแอปพลิเคชันใน Excel ที่ผู้ใช้ทั่วไปสามารถใช้งานได้อย่างง่ายดาย</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-th-list"></i> ประเภทของแอปพลิเคชัน</h3>
+                    <ul class="feature-list">
+                        <li class="feature-item">ระบบจัดการสินค้าคงคลัง</li>
+                        <li class="feature-item">ระบบจัดการลูกค้า (CRM)</li>
+                        <li class="feature-item">ระบบบัญชีและการเงินขนาดเล็ก</li>
+                        <li class="feature-item">ระบบจัดตารางเวลาและตารางการทำงาน</li>
+                        <li class="feature-item">ระบบจัดการโครงการและติดตามความคืบหน้า</li>
+                        <li class="feature-item">ระบบบริหารจัดการทรัพยากรบุคคล</li>
+                        <li class="feature-item">ระบบวิเคราะห์และรายงานผลทางธุรกิจ</li>
+                        <li class="feature-item">แอปพลิเคชันเฉพาะทางตามความต้องการ</li>
+                    </ul>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-lightbulb"></i> คุณสมบัติของแอปพลิเคชัน</h3>
+                    <ul class="feature-list">
+                        <li class="feature-item">หน้าจอผู้ใช้ที่ใช้งานง่ายและสวยงาม</li>
+                        <li class="feature-item">ระบบนำทางและเมนูที่เป็นมิตรกับผู้ใช้</li>
+                        <li class="feature-item">การตรวจสอบข้อมูลนำเข้าและป้องกันข้อผิดพลาด</li>
+                        <li class="feature-item">การประมวลผลและคำนวณอัตโนมัติ</li>
+                        <li class="feature-item">รายงานและแดชบอร์ดสรุปข้อมูล</li>
+                        <li class="feature-item">ระบบความปลอดภัยและการกำหนดสิทธิ์ผู้ใช้</li>
+                        <li class="feature-item">คู่มือการใช้งานและวิดีโอสอนการใช้งาน</li>
+                        <li class="feature-item">การสำรองข้อมูลและกู้คืนข้อมูล</li>
+                    </ul>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-star"></i> ข้อดีของบริการ</h3>
+                    <ul class="feature-list">
+                        <li class="feature-item">ต้นทุนต่ำกว่าการพัฒนาซอฟต์แวร์ทั่วไป</li>
+                        <li class="feature-item">ไม่ต้องติดตั้งซอฟต์แวร์เพิ่มเติม (ใช้ Excel ที่มีอยู่)</li>
+                        <li class="feature-item">ผู้ใช้คุ้นเคยกับ Excel ทำให้เรียนรู้ได้เร็ว</li>
+                        <li class="feature-item">ปรับแต่งได้ตามความต้องการเฉพาะของธุรกิจ</li>
+                        <li class="feature-item">ผู้ใช้สามารถแก้ไขหรือปรับแต่งบางส่วนได้เอง</li>
+                        <li class="feature-item">เชื่อมต่อกับระบบและข้อมูลอื่นๆ ได้ง่าย</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#contact" class="btn-3d" onclick="closeModal()">สนใจบริการนี้ <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="modal5">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-sync-alt"></i> ระบบประมวลผลอัตโนมัติ</h2>
+                <p class="modal-subtitle">ประหยัดเวลาและลดข้อผิดพลาดด้วยระบบประมวลผลข้อมูลอัตโนมัติที่แม่นยำ</p>
+                <div class="close-modal"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3><i class="fas fa-info-circle"></i> รายละเอียดบริการ</h3>
+                    <p>การประมวลผลข้อมูลที่ต้องทำซ้ำๆ เป็นประจำเป็นงานที่เสียเวลาและมีความเสี่ยงต่อความผิดพลาด เราเชี่ยวชาญในการสร้างระบบประมวลผลอัตโนมัติที่ช่วยให้คุณประหยัดเวลา ลดข้อผิดพลาด และเพิ่มประสิทธิภาพในการทำงาน ระบบของเราสามารถทำงานตามตารางเวลาที่กำหนด หรือตอบสนองต่อเหตุการณ์ต่างๆ ได้อัตโนมัติ</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-th-list"></i> บริการที่ครอบคลุม</h3>
+                    <ul class="feature-list">
+                        <li class="feature-item">ระบบนำเข้าและประมวลผลข้อมูลอัตโนมัติ</li>
+                        <li class="feature-item">สร้างรายงานและส่งอีเมลตามตารางเวลาที่กำหนด</li>
+                        <li class="feature-item">ระบบแจ้งเตือนเมื่อพบข้อมูลผิดปกติหรือถึงเกณฑ์ที่กำหนด</li>
+                        <li class="feature-item">ประมวลผลข้อมูลและอัปเดตแดชบอร์ดอัตโนมัติ</li>
+                        <li class="feature-item">สร้างระบบติดตามและประเมินผลตัวชี้วัด (KPI)</li>
+                        <li class="feature-item">เชื่อมโยงข้อมูลระหว่างแผนกต่างๆ อัตโนมัติ</li>
+                        <li class="feature-item">ระบบสำรองและจัดเก็บข้อมูลอัตโนมัติ</li>
+                        <li class="feature-item">ตั้งค่าเงื่อนไขและการตอบสนองอัตโนมัติ</li>
+                    </ul>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-lightbulb"></i> เทคนิคและเครื่องมือที่ใช้</h3>
+                    <p>เราใช้เทคโนโลยีและเครื่องมือหลากหลายในการสร้างระบบอัตโนมัติ ไม่ว่าจะเป็น VBA, Power Automate, Windows Task Scheduler และการเชื่อมต่อกับ API ต่างๆ เพื่อให้ระบบทำงานได้อย่างราบรื่นและมีประสิทธิภาพ เราออกแบบระบบให้ทนทานต่อความผิดพลาดและมีกลไกการกู้คืนหากเกิดปัญหา</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-star"></i> ข้อดีของบริการ</h3>
+                    <ul class="feature-list">
+                        <li class="feature-item">ประหยัดเวลาและทรัพยากรในการทำงาน</li>
+                        <li class="feature-item">ลดความผิดพลาดจากการทำงานด้วยมือ</li>
+                        <li class="feature-item">ทำงานได้ตลอด 24 ชั่วโมง ไม่มีวันหยุด</li>
+                        <li class="feature-item">มีความสม่ำเสมอและแม่นยำในการทำงาน</li>
+                        <li class="feature-item">สามารถปรับตัวตามปริมาณงานที่เปลี่ยนแปลง</li>
+                        <li class="feature-item">ตอบสนองต่อเหตุการณ์และเงื่อนไขได้ทันที</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#contact" class="btn-3d" onclick="closeModal()">สนใจบริการนี้ <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="modal6">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-graduation-cap"></i> ฝึกอบรมเฉพาะทาง</h2>
+                <p class="modal-subtitle">หลักสูตรการใช้งาน Excel ขั้นสูงและการเขียน VBA ที่ออกแบบเฉพาะสำหรับทีมของคุณ</p>
+                <div class="close-modal"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3><i class="fas fa-info-circle"></i> รายละเอียดบริการ</h3>
+                    <p>การพัฒนาทักษะด้าน Excel และ VBA ให้กับทีมของคุณเป็นการลงทุนที่คุ้มค่า ช่วยเพิ่มประสิทธิภาพในการทำงานและลดการพึ่งพาผู้เชี่ยวชาญภายนอก เราให้บริการฝึกอบรมที่ออกแบบเฉพาะตามความต้องการและระดับความสามารถของทีมคุณ โดยเน้นการเรียนรู้ผ่านการปฏิบัติจริงและการประยุกต์ใช้กับงานจริงในองค์กรของคุณ</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-th-list"></i> หลักสูตรที่ให้บริการ</h3>
+                    <ul class="feature-list">
+                        <li class="feature-item">Excel สำหรับการวิเคราะห์ข้อมูล</li>
+                        <li class="feature-item">สูตรและฟังก์ชันขั้นสูงใน Excel</li>
+                        <li class="feature-item">การใช้งาน Power Query และ Power Pivot</li>
+                        <li class="feature-item">การสร้างแดชบอร์ดและการนำเสนอข้อมูล</li>
+                        <li class="feature-item">พื้นฐานการเขียน VBA สำหรับผู้เริ่มต้น</li>
+                        <li class="feature-item">การพัฒนาโปรแกรมขั้นสูงด้วย VBA</li>
+                        <li class="feature-item">การสร้างระบบอัตโนมัติใน Excel</li>
+                        <li class="feature-item">การพัฒนาแอปพลิเคชันใน Excel</li>
+                    </ul>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-lightbulb"></i> รูปแบบการฝึกอบรม</h3>
+                    <ul class="feature-list">
+                        <li class="feature-item">ฝึกอบรมแบบตัวต่อตัวหรือกลุ่มเล็ก</li>
+                        <li class="feature-item">สัมมนาเชิงปฏิบัติการสำหรับทีม</li>
+                        <li class="feature-item">หลักสูตรออนไลน์ที่เรียนได้ทุกที่ทุกเวลา</li>
+                        <li class="feature-item">การโค้ชและให้คำปรึกษาระยะยาว</li>
+                        <li class="feature-item">การสร้างคู่มือและเอกสารประกอบการสอน</li>
+                        <li class="feature-item">Workshop ที่มุ่งเน้นการแก้ปัญหาจริงขององค์กร</li>
+                    </ul>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-star"></i> ข้อดีของบริการ</h3>
+                    <ul class="feature-list">
+                        <li class="feature-item">หลักสูตรที่ปรับแต่งตามความต้องการเฉพาะ</li>
+                        <li class="feature-item">เรียนรู้จากผู้เชี่ยวชาญที่มีประสบการณ์จริง</li>
+                        <li class="feature-item">ฝึกปฏิบัติกับกรณีศึกษาที่เกี่ยวข้องกับงานจริง</li>
+                        <li class="feature-item">เพิ่มทักษะและความมั่นใจให้กับทีมของคุณ</li>
+                        <li class="feature-item">ลดการพึ่งพาผู้เชี่ยวชาญภายนอก</li>
+                        <li class="feature-item">ได้รับเอกสารและคู่มืออ้างอิงหลังการอบรม</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#contact" class="btn-3d" onclick="closeModal()">สนใจบริการนี้ <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+    
     <script>
-        // Smooth Scroll for CTA Button
-        document.querySelector('.cta-btn').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        // Review Slider Navigation
-        const slider = document.querySelector('.review-slide');
-        const prevBtn = document.querySelector('.prev');
-        const nextBtn = document.querySelector('.next');
-        let scrollAmount = 0;
-
-        nextBtn.addEventListener('click', () => {
-            scrollAmount -= 400;
-            slider.style.transform = `translateX(${scrollAmount}px)`;
-            if (Math.abs(scrollAmount) >= slider.scrollWidth / 2) {
-                scrollAmount = 0;
-                slider.style.transition = 'none';
-                slider.style.transform = `translateX(0px)`;
-                setTimeout(() => slider.style.transition = 'transform 0.5s ease', 10);
+        // Scroll Reveal Effect
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial animation for hero section
+            setTimeout(function() {
+                document.querySelector('.hero-content').classList.add('reveal');
+            }, 300);
+            
+            // Reveal elements on scroll
+            function revealOnScroll() {
+                const elements = document.querySelectorAll('.section-title, .service-card, .cta-content, .contact-item');
+                const windowHeight = window.innerHeight;
+                
+                elements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const delay = element.getAttribute('data-delay') || 0;
+                    
+                    if (elementTop < windowHeight * 0.85) {
+                        setTimeout(() => {
+                            element.classList.add('reveal');
+                        }, delay);
+                    }
+                });
             }
-        });
-
-        prevBtn.addEventListener('click', () => {
-            scrollAmount += 400;
-            if (scrollAmount > 0) scrollAmount = 0;
-            slider.style.transform = `translateX(${scrollAmount}px)`;
+            
+            // Initial check
+            revealOnScroll();
+            
+            // Check on scroll
+            window.addEventListener('scroll', revealOnScroll);
+            
+            // Smooth scrolling for navigation links
+            const navLinks = document.querySelectorAll('.nav-link, .btn-3d, a[href^="#"]');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        
+                        const targetId = this.getAttribute('href');
+                        const targetSection = document.querySelector(targetId);
+                        
+                        if (targetSection) {
+                            window.scrollTo({
+                                top: targetSection.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // Navbar scroll effect
+            const navbar = document.querySelector('.navbar');
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+            
+            // Scroll to top button
+            const scrollToTopBtn = document.querySelector('.scroll-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    scrollToTopBtn.classList.add('active');
+                } else {
+                    scrollToTopBtn.classList.remove('active');
+                }
+            });
+            
+            scrollToTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Modal functionality
+            const serviceCards = document.querySelectorAll('.service-card');
+            const modals = document.querySelectorAll('.modal');
+            const closeButtons = document.querySelectorAll('.close-modal');
+            
+            serviceCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const modalId = this.getAttribute('data-modal');
+                    const modal = document.getElementById(modalId);
+                    
+                    if (modal) {
+                        modal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+            });
+            
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const modal = this.closest('.modal');
+                    closeSpecificModal(modal);
+                });
+            });
+            
+            modals.forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeSpecificModal(this);
+                    }
+                });
+            });
+            
+            function closeSpecificModal(modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+            
+            // Close modal function for buttons inside modal
+            window.closeModal = function() {
+                modals.forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = 'auto';
+            };
         });
     </script>
 </body>
