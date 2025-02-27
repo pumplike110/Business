@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บริการจัดการเอกสารและ Excel ระดับพรีเมียม</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f0f4f8;
+            color: #1a1a2e;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Announcement Bar */
+        .announcement {
+            background: linear-gradient(90deg, #ff6f61, #ff9f1c);
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            font-size: 1.3em;
+            font-weight: 600;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .announcement p {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 10s linear infinite;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #16213e, #34495e, #5d76cb);
+            color: #fff;
+            text-align: center;
+            padding: 140px 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 1.8s ease-in-out;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -60%;
+            width: 220%;
+            height: 220%;
+            background: radial-gradient(circle, rgba(255, 159, 28, 0.25), transparent);
+            animation: glowPulse 4s infinite ease-in-out;
+            z-index: 0;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            animation: slideUp 1.2s ease-in-out;
+        }
+
+        header p {
+            font-size: 1.6em;
+            color: #e6e9f0;
+            margin-bottom: 35px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 18px 50px;
+            background: linear-gradient(45deg, #ff9f1c, #ff6f61);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.2em;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            transition: transform 0.5s ease, box-shadow 0.5s ease, background 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .cta-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 200%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: left 0.6s ease;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.2) translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(45deg, #ff6f61, #ff9f1c);
+        }
+
+        .cta-btn:hover::after {
+            left: 150%;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 120px 40px;
+            text-align: center;
+            background: linear-gradient(to bottom, #f0f4f8, #d9e2ec);
+        }
+
+        .services h2 {
+            font-size: 3em;
+            color: #16213e;
+            font-weight: 700;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 70px;
+            animation: slideUp 1.2s ease-in-out;
+        }
+
+        .service-grid {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+            max-width: 1300px;
+            margin: 0 auto;
+            perspective: 2000px;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, #34495e, #16213e);
+            color: #e6e9f0;
+            width: 340px;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+            opacity: 0;
+            animation: fadeInUp 1.2s ease forwards;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #ff9f1c;
+        }
+
+        .service-card:nth-child(1) { animation-delay: 0.3s; }
+        .service-card:nth-child(2) { animation-delay: 0.5s; }
+        .service-card:nth-child(3) { animation-delay: 0.7s; }
+
+        .service-card:hover {
+            transform: scale(1.18) translateZ(30px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+            width: 380px;
+            background: linear-gradient(135deg, #5d76cb, #34495e);
+            z-index: 10;
+        }
+
+        .service-grid:hover .service-card:not(:hover) {
+            transform: scale(0.92) translateX(15px);
+            filter: blur(3px);
+            transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .service-card h3 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #ff9f1c;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .service-card p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .service-card ul {
+            list-style: none;
+            margin-top: 25px;
+            text-align: left;
+            font-size: 1.1em;
+            opacity: 0;
+            max-height: 0;
+            transition: opacity 0.5s ease, max-height 0.7s ease;
+        }
+
+        .service-card:hover ul {
+            opacity: 1;
+            max-height: 300px;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -60%;
+            width: 220%;
+            height: 220%;
+            background: radial-gradient(circle, rgba(255, 159, 28, 0.35), transparent);
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Reviews Section */
+        .reviews {
+            padding: 120px 40px;
+            background: linear-gradient(to bottom, #d9e2ec, #c8d3e0);
+            text-align: center;
+            position: relative;
+        }
+
+        .reviews h2 {
+            font-size: 3em;
+            color: #16213e;
+            font-weight: 700;
+            margin-bottom: 80px;
+            animation: slideUp 1.2s ease-in-out;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .review-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .review-slider {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .review-slide {
+            display: flex;
+            animation: infiniteSlide 20s linear infinite;
+            width: max-content;
+        }
+
+        @keyframes infiniteSlide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .review-card {
+            background: linear-gradient(135deg, #fff, #f5f6fa);
+            padding: 35px;
+            border-radius: 20px;
+            margin: 20px;
+            width: 360px;
+            flex-shrink: 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 2px solid #ff9f1c;
+            color: #1a1a2e;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .review-card:hover {
+            transform: scale(1.08) translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            background: linear-gradient(135deg, #f5f6fa, #fff);
+            z-index: 5;
+        }
+
+        .review-card::before {
+            content: '★★★★★';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #ff9f1c;
+            font-size: 1.2em;
+            opacity: 0.8;
+            transition: transform 0.5s ease;
+        }
+
+        .review-card:hover::before {
+            transform: scale(1.2);
+        }
+
+        .review-card p {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .review-card strong {
+            font-size: 1.1em;
+            color: #ff6f61;
+            font-weight: 600;
+        }
+
+        .review-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 159, 28, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .review-card:hover::after {
+            opacity: 1;
+        }
+
+        /* Navigation Arrows */
+        .review-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            z-index: 10;
+            padding: 0 10px;
+        }
+
+        .review-nav span {
+            background: rgba(255, 159, 28, 0.8);
+            color: #fff;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .review-nav span:hover {
+            transform: scale(1.2);
+            background: #ff6f61;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #16213e, #34495e);
+            color: #ff9f1c;
+            text-align: center;
+            padding: 60px 40px;
+            box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        footer p {
+            color: #e6e9f0;
+            font-size: 1.2em;
+            margin: 10px 0;
+            transition: transform 0.4s ease, color 0.4s ease;
+        }
+
+        footer p:hover {
+            transform: scale(1.05) translateY(-5px);
+            color: #ff6f61;
+        }
+
+        .contact-info {
+            position: relative;
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #ff9f1c, #ff6f61);
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+
+        .contact-info:hover {
+            transform: scale(1.1) rotate(2deg);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            background: linear-gradient(45deg, #ff6f61, #ff9f1c);
+        }
+
+        .contact-info::before {
+            content: '✨ ติดต่อเลย!';
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff9f1c;
+            font-size: 1em;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.4s ease, top 0.4s ease;
+        }
+
+        .contact-info:hover::before {
+            opacity: 1;
+            top: -50px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(70px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes glowPulse {
+            0% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.08); }
+            100% { opacity: 0.2; transform: scale(1); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .service-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+            .service-card {
+                width: 300px;
+            }
+            .service-card:hover {
+                width: 340px;
+                transform: scale(1.12);
+            }
+            .service-grid:hover .service-card:not(:hover) {
+                transform: scale(1);
+                filter: none;
+            }
+            .review-card {
+                width: 100%;
+                margin: 10px 0;
+            }
+            header h1 { font-size: 2.5em; }
+            .services h2, .reviews h2 { font-size: 2.2em; }
+            .review-nav { display: none; }
+            .contact-info { padding: 10px 20px; }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Announcement Bar -->
+    <div class="announcement">
+        <p>โปรโมชั่นพิเศษ! รับส่วนลด 30% สำหรับงาน Excel ด่วน - สั่งเลยวันนี้!</p>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <h1>บริการจัดการเอกสารและ Excel ระดับพรีเมียม</h1>
+        <p>จัดการข้อมูลจำนวนมาก ด้วยเทคโนโลยีทันสมัยและทีมงานมืออาชีพ</p>
+        <a href="#contact" class="cta-btn">เริ่มสั่งงานทันที</a>
+    </header>
+
+    <!-- Services -->
+    <section class="services">
+        <h2>บริการของเรา</h2>
+        <div class="service-grid">
+            <div class="service-card">
+                <h3>จัดการข้อมูล Excel</h3>
+                <p>จัดระเบียบข้อมูลนับแสนรายการ</p>
+                <ul>
+                    <li>จัดเรียงข้อมูลตามหมวดหมู่</li>
+                    <li>กรองข้อมูลซ้ำ</li>
+                    <li>สร้างตารางสรุปอัตโนมัติ</li>
+                </ul>
+            </div>
+            <div class="service-card">
+                <h3>สร้าง Macro อัตโนมัติ</h3>
+                <p>ทำให้งาน Excel เป็นอัตโนมัติ</p>
+                <ul>
+                    <li>บันทึกขั้นตอนซ้ำ ๆ</li>
+                    <li>สร้างปุ่มสั่งงาน</li>
+                    <li>ลดเวลาในการทำงาน</li>
+                </ul>
+            </div>
+            <div class="service-card">
+                <h3>วิเคราะห์ข้อมูล</h3>
+                <p>เปลี่ยนข้อมูลเป็น insight</p>
+                <ul>
+                    <li>สร้างกราฟสรุปผล</li>
+                    <li>วิเคราะห์แนวโน้ม</li>
+                    <li>รายงานข้อมูลเชิงลึก</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews -->
+    <section class="reviews">
+        <h2>รีวิวจากลูกค้า</h2>
+        <div class="review-container">
+            <div class="review-slider">
+                <div class="review-slide">
+                    <div class="review-card">
+                        <p>"จัดการข้อมูลแสนรายการได้ในวันเดียว! งานคุณภาพสูงมาก"</p>
+                        <p><strong>- คุณแอน, Data Analyst</strong></p>
+                    </div>
+                    <div class="review-card">
+                        <p>"Macro ช่วยประหยัดเวลาไปมาก ทีมงานมืออาชีพสุด ๆ"</p>
+                        <p><strong>- คุณบี, Project Manager</strong></p>
+                    </div>
+                    <div class="review-card">
+                        <p>"กราฟสวย วิเคราะห์ข้อมูลได้ลึก เกินคาดจริง ๆ"</p>
+                        <p><strong>- คุณซี, Business Owner</strong></p>
+                    </div>
+                    <div class="review-card">
+                        <p>"จัดการข้อมูลแสนรายการได้ในวันเดียว! งานคุณภาพสูงมาก"</p>
+                        <p><strong>- คุณแอน, Data Analyst</strong></p>
+                    </div>
+                    <!-- Duplicate for infinite loop -->
+                    <div class="review-card">
+                        <p>"Macro ช่วยประหยัดเวลาไปมาก ทีมงานมืออาชีพสุด ๆ"</p>
+                        <p><strong>- คุณบี, Project Manager</strong></p>
+                    </div>
+                    <div class="review-card">
+                        <p>"กราฟสวย วิเคราะห์ข้อมูลได้ลึก เกินคาดจริง ๆ"</p>
+                        <p><strong>- คุณซี, Business Owner</strong></p>
+                    </div>
+                </div>
+            </div>
+            <div class="review-nav">
+                <span class="prev">◄</span>
+                <span class="next">►</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="contact-info">
+            <p>ติดต่อเรา: LINE @excelpro | อีเมล: info@excelpro.com</p>
+        </div>
+        <p>© 2025 บริการจัดการเอกสารและ Excel ระดับพรีเมียม</p>
+    </footer>
+
+    <!-- JavaScript for Navigation and Smooth Scroll -->
+    <script>
+        // Smooth Scroll for CTA Button
+        document.querySelector('.cta-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Review Slider Navigation
+        const slider = document.querySelector('.review-slide');
+        const prevBtn = document.querySelector('.prev');
+        const nextBtn = document.querySelector('.next');
+        let scrollAmount = 0;
+
+        nextBtn.addEventListener('click', () => {
+            scrollAmount -= 400;
+            slider.style.transform = `translateX(${scrollAmount}px)`;
+            if (Math.abs(scrollAmount) >= slider.scrollWidth / 2) {
+                scrollAmount = 0;
+                slider.style.transition = 'none';
+                slider.style.transform = `translateX(0px)`;
+                setTimeout(() => slider.style.transition = 'transform 0.5s ease', 10);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            scrollAmount += 400;
+            if (scrollAmount > 0) scrollAmount = 0;
+            slider.style.transform = `translateX(${scrollAmount}px)`;
+        });
+    </script>
+</body>
+</html>
